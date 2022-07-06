@@ -1,0 +1,38 @@
+version: 0.0.1
+
+services:
+  server:
+    build:
+      dockerfile: ./Dockerfiles/ubuntu-servert:1.0.Dockerfile
+    image: ubuntu-server:1.0
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      - ./ssh/sshd_config.d:/etc/ssh/sshd_config.d:ro
+    networks:
+      - lan
+
+  client:
+    build:
+      dockerfile: ./Dockerfiles/ubuntu-client:1.0.Dockerfile
+    image: ubuntu-client:1.0
+    networks:
+      - lan
+
+  proxy:
+    image: nginx:alpine
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      - ./nginx/.htpasswd:/etc/nginx/.htpasswd:ro
+      - ./html:/var/www/html:ro
+    ports:
+      - 8080:80
+
+networks:
+  lan:
+    driver: bridge
+    driver_opts:
+      parent: enp4s0
+    ipam:
+      config:
+        - subnet: 192.168.1.0/24
+          gateway: 192.168.1.1

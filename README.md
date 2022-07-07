@@ -85,7 +85,7 @@ Al iniciar los contenedores con `docker compose up -d` ejecutamos:
 
 ```shell
 docker compose run -it server bash
-$ service ssh start
+$ service ssh start # Activamos SSH
 $ passwd
 ...
 # Establecemos una constraseña al usuario root
@@ -161,3 +161,52 @@ htpasswd nginx/.htpasswd newUser
 Nos pedirá ingresar los valores para la contraseña
 
 Finalmente podemos abrir el navegador ingresar a http://localhost:8080 y veremos que nos pide autenticación
+
+### Servidor Web
+
+En el servicio `server` tenemos instalado nginx eso quiere decir que al saber la IP del servidor podemos comunicarnos con el asi que realizando las siguientes instrucciones podemos llegar a ello:
+
+```shell
+docker compose run -it server bash
+
+$ service nginx start # Activamos NGINX
+$ hostname -I
+
+$ 192.168.1.X
+```
+
+En un navegador abrimos `http://192.168.1.X` y nos mostrará la página por defecto de NGINX o desde nuestra terminal o del servicio `cliente` podemos escribir:
+
+```shell
+curl http://192.168.1.X
+```
+
+Y Nos mostrará esto:
+
+```txt
+<!DOCTYPE html>
+<html>
+<head>
+<title>Welcome to nginx!</title>
+<style>
+    body {
+        width: 35em;
+        margin: 0 auto;
+        font-family: Tahoma, Verdana, Arial, sans-serif;
+    }
+</style>
+</head>
+<body>
+<h1>Welcome to nginx!</h1>
+<p>If you see this page, the nginx web server is successfully installed and
+working. Further configuration is required.</p>
+
+<p>For online documentation and support please refer to
+<a href="http://nginx.org/">nginx.org</a>.<br/>
+Commercial support is available at
+<a href="http://nginx.com/">nginx.com</a>.</p>
+
+<p><em>Thank you for using nginx.</em></p>
+</body>
+</html>
+```
